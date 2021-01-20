@@ -123,25 +123,34 @@ function selectEmblem(seed, dimensions, color, bgIsCircle, layerIsBlank) {
 	const layerGroup = document.createElementNS(svgNameSpace, 'g');
 	let emblem
 	if				(determiner < 150) {
+		//console.log('circle');
 		emblem = drawCircle((smallestSide * .28), color);
 	} else if (determiner < 220) {
+		//console.log('hex');
 		emblem = drawHex((smallestSide * .3), color);
 	} else if (determiner < 290) {
+		//console.log('pent');
 		emblem = drawPent((smallestSide * .39), color);
 	} else if (determiner < 350) {
+		//console.log('rhomb root 3');
 		emblem = drawRhombus((smallestSide * .43), (smallestSide * .74), color);
 	} else if (determiner < 410) {
+		//console.log('rhomb root 2');
 		emblem = drawRhombus((smallestSide * .47), (smallestSide * .67), color);
 	} else if (determiner < 530) {
+		//console.log('star');
 		emblem = drawStar((smallestSide * .44), color);
 	} else if (determiner < 620) {
+		//console.log('square');
 		emblem = drawRect((smallestSide * .56), (smallestSide * .56), color);
 	} else if (determiner < 750) {
+		//console.log('triangle');
 		emblem = drawTriangle((smallestSide * .65), color);
 	} else {
 		// the null emblem
 		// object needs to exist, but it can be invisible.
 		// remember this ends at 997!!!
+		//console.log('no emblem');
 		emblem = drawRect(0, 0, color);
 		emblem.style.display = 'none';
 	}
@@ -185,10 +194,10 @@ function drawRhombus(axisX, axisY, inputColor) {
 	const rhom = document.createElementNS(svgNameSpace, 'polygon');
 	const color = `hsl(${inputColor[0]}, ${inputColor[1]}%, ${inputColor[2]}%)`;
 	const points = [
-		`0,${-axisX / 2}`,
+		`0,${-axisY / 2}`,
 		`${axisX / 2},0`,
 		`0,${axisY / 2}`,
-		`${-axisY / 2},0`,
+		`${-axisX / 2},0`
 	];
 	rhom.setAttribute('points', points.join(' '));
 	rhom.setAttribute('fill', color);
@@ -349,27 +358,8 @@ function selectColors(seed, layers) {
 	return colors;
 }
 
-function styleComments(commentNodeList) {
-	commentNodeList.forEach(commentNode => {
-		let userID = commentNode.href.match(/\d+\/$/)[0];
-		userID = userID.slice(0, (userID.length - 1));
-		const div = createAvatarContainer();
-		console.log(commentNode.innerText); // that's the user's username >:3
-		const avatar = createAvatar(userID);
-		avatar.style.position = 'relative';
-		avatar.style.right = `${avatar.width.baseVal.value + 16}px`;
-		div.appendChild(avatar);
-		const commentContainer= commentNode.parentElement.parentElement.parentElement;
-		if ( commentContainer.querySelector('.comment__prediction') !== null) {
-			movePrediction(commentContainer, avatar.width.baseVal.value);
-		}
-		commentNode.prepend(div);
-	});
-}
-
 function main() {
 	const avatar = createAvatar(5);
-
 }
 
 const svgNameSpace = 'http://www.w3.org/2000/svg';

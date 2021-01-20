@@ -19,10 +19,12 @@
     --link-text: #4ad;
   }
 }
-body {
+html, body {
   background: var(--base-bg);
   margin: 0;
+  padding: 0;
   height: 100%;
+  min-height: 100%;
 }
 
 * {
@@ -33,6 +35,24 @@ body {
 a {
   color: var(--link-text);
   text-decoration: underline;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.title {
+  color: #bb6;
+}
+
+.content {
+  color: #909;
+}
+
+footer {
+  margin-top: auto;
 }
 
 /*# sourceMappingURL=main.css.map */
