@@ -249,8 +249,13 @@ function selectHues(inputColors, seed) {
 	let salt = 0;
 	// lightness contrast
 	for (let i = 0; i + 1 < colors.length; i++) {
-		if (Math.abs(colors[i][2] - colors[i + 1][2]) < 25) {
-			colors[i + 1][2] = 20 + (bigChungus(seed + 3 + salt) % 61);
+		if (colors[i][2] == 0
+			||colors[i][2] == 100
+			||colors[i + 1][2] == 0
+			||colors[i + 1][2] == 100 ) {
+			// do nothing
+		} else if (Math.abs(colors[i][2] - colors[i + 1][2]) < 29) {
+			colors[i + 1][2] = 19 + (bigChungus(seed + 3 + salt) % 63);
 			i--;
 		}
 		salt++;
