@@ -7,17 +7,18 @@ function bigChungus(input) {
 	//               DO NOT USE THIS FOR ANYTHING IMPORTANT
 	//
 	// the sum of the 4 components is less than 9 * 10 ** 15, aka BigInt.
-	// the sum is always greater than 10**7, so 9_999_991 is a prime that is less
+	// you can't do precise modulus on BigInts!
+	// the sum is always greater than 10**12, so 9_999_999_967 is a prime less
 	// than that.
 	//
 	// this function has slightly different output in chrome v firefox
 	//
 	const num = Math.floor(input);
-	const val = Math.floor( ( ((21 ** (0.5)) ** (11 + (num % 13)))
-													+ ((7 ** (1 / 4)) ** (26 + (num % 47)))
-													+ ((2 ** (1 / 4)) ** (96 + (num % 109)))
-													+	((2 ** (1 / 8)) ** (187 + (num % 223)))
-													) % 9999991
+	const val = Math.floor( ( ((5 ** (1 / 3)) ** (52 + (num % 13)))
+													+ ((2 ** (1 / 2)) ** (54 + (num % 47)))
+													+ ((3 ** (1 / 7)) ** (115 + (num % 109)))
+													+	((7 ** (1 / 23)) ** (194 + (num % 223)))
+													) % 9999999967
 												);
 	return val;
 }
@@ -31,19 +32,19 @@ function createSvg() {
 
 function setBg(seed, color) {
 	const svg = createSvg();
-	const determiner = (bigChungus(seed) + 93) % 101;
+	const determiner = (seed % 101) / 101
 	svg.isCircle = false;
 	const dimensions = [];
-	if (determiner < 39) {
+	if (determiner < .3) {
 		dimensions.push(50);
 		dimensions.push(50);
-	} else if (determiner < 49) {
+	} else if (determiner < .43) {
 		dimensions.push(59);
 		dimensions.push(42);
-	} else if (determiner < 59) {
+	} else if (determiner < .56) {
 		dimensions.push(42);
 		dimensions.push(59);
-	} else if (determiner < 69) {
+	} else if (determiner < .69) {
 		dimensions.push(67);
 		dimensions.push(37);
 	} else {
@@ -165,28 +166,28 @@ function drawHex(sideLength, inputColor) {
 	return hex;
 }
 
-function selectLightness(seed, num) {
-	const colors = [];
-	let colorCount = 0;
+function selectLightness(seed, numOfSelections) {
+	const colors = ['color'];
+	let colorCount = 1;
 	// sometimes this loop will run with no effect.  it's not count i up to num
-	for (let i = 0; colors.length < num; i++) {
-		const determiner = bigChungus(seed + 809 + i) % 241;
-		if ((determiner < 39) && (!colors.includes('black'))) {
+	for (let i = 0; colors.length < numOfSelections; i++) {
+		const determiner = (bigChungus(seed + 4312774567655 + i) % 241) / 241
+		if ((determiner < .16) && (!colors.includes('black'))) {
 			colors.push('black');
-		} else if ((determiner < 66) && (!colors.includes('white'))) {
+		} else if ((determiner < .30) && (!colors.includes('white'))) {
 			colors.push('white');
-		} else if ((determiner < 84) && (!colors.includes('gray'))) {
+		} else if ((determiner < .42) && (!colors.includes('gray'))) {
 			colors.push('gray');
-		} else if (determiner < (241 - (colorCount * 52))) {
+		} else if (determiner < (1 - (colorCount * .18))) {
 			// colorCount decreases the chances of multiple colors being selected
 			colorCount++;
 			colors.push('color');
 		}
 		if (i > 49) { break; }
 	}
-	const shuffleDeterminer = bigChungus(seed + 5) % 6;
-	const shuffledColors = [];
 	// * chef's kiss *
+	const shuffleDeterminer = seed % 6;
+	const shuffledColors = [];
 	shuffledColors.push(colors.splice((shuffleDeterminer % 3), 1)[0]);
 	shuffledColors.push(colors.splice((shuffleDeterminer % 2), 1)[0]);
 	shuffledColors.push(colors[0]);
@@ -205,27 +206,27 @@ function selectHues(inputColors, seed) {
 		} else if (inputColors[index] === 'black') {
 			colors.push([0, 0, 0]);
 		} else if (inputColors[index] === 'gray') {
-			colors.push([0, 0, 25 + (bigChungus(seed + 19 + index) % 47)]);
+			colors.push([0, 0, 25 + (bigChungus(seed + (69 * index)) % 47)]);
 		} else {
 			// colors, presumably
 			// if no hues exist yet
 			if (hues[0] === undefined) {
-				let val = (bigChungus(seed + 931 + index) % 360);
+				let val = (bigChungus(seed + index) % 360);
 				hues.push(val);
 			} else {
 				// generate new hue with minimum hue contrast
 				const huesNeeded = hues.length + 1;
 				for (let salt = 0; hues.length < huesNeeded; salt++) {
-					const hue = bigChungus(seed + 613 + (index * 100) + salt) % 360;
+					const hue = bigChungus(seed + (index * 10000) + salt) % 360;
 					let hueAllowed = true;
-					const minContrast = 55;
+					const minContrast = 59;
 					hues.forEach((oldHue) => {
-						if ( ( (hue > (oldHue - minContrast       )  )
-								 &&(hue < (oldHue + minContrast       )  )  )
-							 ||( (hue > (oldHue - minContrast + 360)  )
-								 &&(hue < (oldHue + minContrast + 360)  )  )
-							 ||( (hue > (oldHue - minContrast - 360)  )
-								 &&(hue < (oldHue + minContrast - 360)  )  )
+						if (   ( (hue > (oldHue - minContrast      )  )
+									 &&(hue < (oldHue + minContrast      )  )  )
+								 ||( (hue > (oldHue - minContrast + 360)  )
+									 &&(hue < (oldHue + minContrast + 360)  )  )
+								 ||( (hue > (oldHue - minContrast - 360)  )
+									 &&(hue < (oldHue + minContrast - 360)  )  )
 							 ) {
 							hueAllowed = false;
 						}
@@ -241,8 +242,8 @@ function selectHues(inputColors, seed) {
 					}
 				}
 			}
-			const saturation = 100 - (bigChungus(seed + 17 + index) % 53);
-			const lightness = 25 + (bigChungus(seed + 33 + index) % 47);
+			const saturation = 100 - (bigChungus(seed + (500 * index)) % 53);
+			const lightness = 25 + (bigChungus(seed + (8888 * index)) % 47);
 			colors.push([ hues[hues.length - 1], saturation, lightness ]);
 		}
 	}
@@ -255,7 +256,7 @@ function selectHues(inputColors, seed) {
 			||colors[i + 1][2] == 100 ) {
 			// do nothing
 		} else if (Math.abs(colors[i][2] - colors[i + 1][2]) < 29) {
-			colors[i + 1][2] = 19 + (bigChungus(seed + 3 + salt) % 63);
+			colors[i + 1][2] = 19 + (bigChungus(seed + 3861533478814 + salt) % 63);
 			i--;
 		}
 		salt++;
@@ -269,156 +270,203 @@ function selectColors(seed) {
 	return colors;
 }
 
-function selectTriColorLayer(seed, dimensions, color1, color2) {
-	let smallestSide = dimensions[0];
-	if (dimensions[0] > dimensions[1]) { smallestSide = dimensions[1]; }
-	const determiner = (bigChungus(seed) + 411) % 599;
-	const layerGroup = document.createElementNS(svgNameSpace, 'g');
-	if        (determiner < 100) {
-		// horizontal bands
-		const middle = drawRect(dimensions[0], dimensions[1] * (2 / 3), color2);
-		const upper = drawRect(dimensions[0], dimensions[1] * (1 / 3), color1);
-		middle.setAttribute('transform', `translate(${dimensions[0] / 2}, ${dimensions[1] / 3})`);
-		upper.setAttribute('transform', `translate(${dimensions[0] / 2}, ${dimensions[1] / 6})`);
-		layerGroup.appendChild(middle);
-		layerGroup.appendChild(upper);
-	} else if (determiner < 200) {
-		// vertical bands
-		const middle = drawRect(dimensions[0] * (2 / 3), dimensions[1], color2);
-		const upper = drawRect(dimensions[0] * (1 / 3), dimensions[1], color1);
-		middle.setAttribute('transform', `translate(${dimensions[0] / 3}, ${dimensions[1] / 2})`);
-		upper.setAttribute('transform', `translate(${dimensions[0] / 6}, ${dimensions[1] / 2})`);
-		layerGroup.appendChild(middle);
-		layerGroup.appendChild(upper);
-	} else if (determiner < 280) {
-		//console.log('half diagonal');
-		const bgThickness = (((dimensions[0] ** 2) + (dimensions[1] ** 2)) ** 0.5) / 2
-		const bgLayer = drawLine([-dimensions[0] / 2, dimensions[1]], [dimensions[0], -dimensions[1] / 2], bgThickness, color1);
-		const bandThickness = 6 + ((bigChungus(seed + 4) % 49669) / (49669 / 19));
-		const bandLayer = drawLine([0, dimensions[1]], [dimensions[0], 0], bandThickness, color2);
-		layerGroup.appendChild(bgLayer);
-		layerGroup.appendChild(bandLayer);
-	} else if (determiner < 360) {
-		//console.log('half other diagonal');
-		const bgThickness = (((dimensions[0] ** 2) + (dimensions[1] ** 2)) ** 0.5) / 2
-		const bgLayer = drawLine([0, -dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1]], bgThickness, color1);
-		const bandThickness = 6 + ((bigChungus(seed + 4) % 49669) / (49669 / 19));
-		const bandLayer = drawLine([0, 0], [dimensions[0], dimensions[1]], bandThickness, color2);
-		layerGroup.appendChild(bgLayer);
-		layerGroup.appendChild(bandLayer);
-	} else if (determiner < 460) {
-		//console.log('diagonal crosses');
-		const thickness = 6 + ((bigChungus(seed + 1) % 31) / 1.77);
-		let upperThickness = thickness / 2;
-		if ((bigChungus(seed + 30223) % 53791) > 27000) {
-			upperThickness *= 0.828;
-		}
-		const lineMiddle1 = drawLine([0, 0], [dimensions[0], dimensions[1]], thickness, color1);
-		const lineMiddle2 = drawLine([dimensions[0], 0], [0, dimensions[1]], thickness, color1);
-		const lineUpper1 = drawLine([0, 0], [dimensions[0], dimensions[1]], upperThickness, color2);
-		const lineUpper2 = drawLine([dimensions[0], 0], [0, dimensions[1]],upperThickness, color2);
-		layerGroup.appendChild(lineMiddle1)
-		layerGroup.appendChild(lineMiddle2)
-		layerGroup.appendChild(lineUpper1)
-		layerGroup.appendChild(lineUpper2)
-	} else {
-		//console.log('ortho crosses');
-		let lineX = [[0, dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1] / 2]];
-		let lineY = [[dimensions[0] / 2, 0], [dimensions[0] / 2, dimensions[1] * 3 / 2]];
-		const underThickness = 6 + (bigChungus(seed + 4) % 17);
-		let overThickness = underThickness / 2;
-		const bandDeterminer = bigChungus(seed + 16) % 191;
-		if (bandDeterminer < 111) {
-			overThickness *= 0.828;
-		}
-		const positionDeterminer = (bigChungus(seed + 27098) % 68351);
-		if (positionDeterminer > 31000) {
-			// determine if we have a wide rect or tall rect
-			if (dimensions[0] > dimensions[1]) {
-				layerGroup.setAttribute('transform', `translate(-${(dimensions[0] / 2) - (dimensions[1] / 2)}, 0)`);
-			} else {
-				layerGroup.setAttribute('transform', `translate(0, -${(dimensions[1] / 2) - (dimensions[0] / 2)})`);
-			}
-		}
-		const under1 = drawLine(lineX[0], lineX[1], underThickness, color1);
-		const under2 = drawLine(lineY[0], lineY[1], underThickness, color1);
-		const over1 = drawLine(lineX[0], lineX[1], overThickness, color2);
-		const over2 = drawLine(lineY[0], lineY[1], overThickness, color2);
-		layerGroup.appendChild(under1);
-		layerGroup.appendChild(under2);
-		layerGroup.appendChild(over1);
-		layerGroup.appendChild(over2);
-	}
-	return layerGroup;
-}
-
-function selectMonoColorLayer(seed, dimensions, color, isCircle) {
-	let smallestSide = dimensions[0];
-	if (dimensions[0] > dimensions[1]) { smallestSide = dimensions[1]; }
-	if (isCircle) {smallestSide *= 0.8}
-	const determiner = (bigChungus(seed) + 883) % 1009;
+function selectLayer(seed, dimensions, colors, colorCount, isCircle) {
+	const sortedLengths = dimensions.slice().sort();
+	if (isCircle) {sortedLengths[0] *= 0.8}
 	const layerGroup = document.createElementNS(svgNameSpace, 'g');
 	layerGroup.noEmblem = false;
-	if        (determiner < 160) {
-		//console.log('half horizontal band');
-		const layer = drawRect(dimensions[0], dimensions[1] / 2, color);
-		layer.setAttribute('transform', `translate(${dimensions[0] / 2}, ${dimensions[1] / 4})`);
+	const rotGroup = document.createElementNS(svgNameSpace, 'g');
+	const rotGroupTop = document.createElementNS(svgNameSpace, 'g');
+	layerGroup.append(rotGroup);
+	layerGroup.append(rotGroupTop);
+	layerGroup.setAttribute('transform', `translate(${dimensions[0]/2},${dimensions[1]/2})`);
+	const diagThickness = (dimensions[0] * dimensions[1]) / ((dimensions[0] ** 2) + (dimensions[1] ** 2)) ** 0.5;
+	const bandThickness = (seed % 69877) / 69877;
+	const rotDeterminer = (seed % 81353) / 81353;
+	const posDeterminer = (seed % 28711) / 28711;
+	const doubleBandsDet = (seed % 2137) / 2137;
+	const determiner = (seed % 1009) / 1009;
+	if        (determiner < .15) {
+		console.log('half horizontal bands');
+		const layer = drawRect(dimensions[0], dimensions[1] / 2, colors[1]);
+		layer.setAttribute('transform', `translate(0, ${-dimensions[1] / 4})`);
 		layerGroup.appendChild(layer);
-	} else if (determiner < 320) {
-		//console.log('half vertical band');
-		const layer = drawRect(dimensions[0] / 2, dimensions[1], color);
-		layer.setAttribute('transform', `translate(${dimensions[0] / 4}, ${dimensions[1] / 2})`);
+		if (colorCount > 1) {
+			console.log('three horizontal bands');
+			layer.setAttribute('transform', `translate(0, ${-dimensions[1] / 12})`);
+			const layerTop = drawRect(dimensions[0], dimensions[1] / 3, colors[2]);
+			layerTop.setAttribute('transform', `translate(0, ${-dimensions[1] / 3})`);
+			layerGroup.appendChild(layerTop);
+		}
+	} else if (determiner < .30) {
+		console.log('half vertical band');
+		const layer = drawRect(dimensions[0] / 2, dimensions[1], colors[1]);
+		layer.setAttribute('transform', `translate(${-dimensions[0] / 4})`);
 		layerGroup.appendChild(layer);
-	} else if (determiner < 480) {
-		//console.log('half diagonal');
-		const thickness = (((dimensions[0] ** 2) + (dimensions[1] ** 2)) ** 0.5) / 2
-		const layer = drawLine([-dimensions[0] / 2, dimensions[1]], [dimensions[0], -dimensions[1] / 2], thickness, color);
+		if (colorCount > 1) {
+			console.log('three vertical bands');
+			layer.setAttribute('transform', `translate(${-dimensions[0] / 12})`);
+			const layerTop = drawRect(dimensions[0] / 3, dimensions[1], colors[2]);
+			layerTop.setAttribute('transform', `translate(${-dimensions[0] / 3})`);
+			layerGroup.appendChild(layerTop);
+		}
+	} else if (determiner < .45) {
+		console.log('half diagonal');
+		layerGroup.setAttribute('transform', `translate(0)`);
+		const layer = drawLine([-dimensions[0] / 2, dimensions[1]], [dimensions[0], -dimensions[1] / 2], diagThickness, colors[1]);
 		layerGroup.appendChild(layer);
-	} else if (determiner < 640) {
-		//console.log('half other diagonal');
-		const thickness = (((dimensions[0] ** 2) + (dimensions[1] ** 2)) ** 0.5) / 2
-		const layer = drawLine([0, -dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1]], thickness, color);
+		if (colorCount > 1) {
+			console.log('three diag bands');
+			const layerTop = drawLine([-dimensions[0] / 2, dimensions[1]], [dimensions[0], -dimensions[1] / 2], diagThickness, colors[2]);
+			layer.setAttribute('transform', `translate(${dimensions[0] / 6}, ${dimensions[1] / 6})`);
+			layerTop.setAttribute('transform', `translate(${-dimensions[0] / 6}, ${-dimensions[1] / 6})`);
+			if (isCircle) {
+				layer.setAttribute('transform', `translate(${dimensions[0] * 3 / 24}, ${dimensions[1] * 3 / 24})`);
+				layerTop.setAttribute('transform', `translate(${-dimensions[0] * 3 / 24}, ${-dimensions[1] * 3 / 24})`);
+			}
+			layerGroup.appendChild(layerTop);
+		}
+	} else if (determiner < .60) {
+		console.log('half other diagonal');
+		layerGroup.setAttribute('transform', `translate(0)`);
+		const layer = drawLine([0, -dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1]], diagThickness, colors[1]);
 		layerGroup.appendChild(layer);
-	} else if (determiner < 820) {
-		//console.log('ortho crosses');
-		let lineX = [[0, dimensions[1] / 2], [dimensions[0], dimensions[1] / 2]];
-		let lineY = [[dimensions[0] / 2, 0], [dimensions[0] / 2, dimensions[1]]];
-		const posDeterminer = bigChungus(seed + 6888) % 28711;
-		if (posDeterminer < 13000) {
-			layerGroup.noEmblem = true;
-			if (smallestSide === dimensions[0]) {
-				lineX[0][1] = dimensions[0] / 2;
-				lineX[1][1] = dimensions[0] / 2;
-			} else {
-				lineY[0][0] = dimensions[1] / 2;
-				lineY[1][0] = dimensions[1] / 2;
+		if (colorCount > 1) {
+			console.log('three diag bands');
+			const layerTop = drawLine([0, -dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1]], diagThickness, colors[2]);
+			layer.setAttribute('transform', `translate(${-dimensions[0] / 6}, ${dimensions[1] / 6})`);
+			layerTop.setAttribute('transform', `translate(${dimensions[0] / 6}, ${-dimensions[1] / 6})`);
+			layerGroup.appendChild(layerTop);
+			if (isCircle) {
+				layer.setAttribute('transform', `translate(${-dimensions[0] * 3 / 24}, ${dimensions[1] * 3 / 24})`);
+				layerTop.setAttribute('transform', `translate(${dimensions[0] * 3 / 24}, ${-dimensions[1] * 3 / 24})`);
 			}
 		}
-		const thickness = 6 + (bigChungus(seed + 10076) % 16631) / (16631 / 8);
-		const horizontal = drawLine(lineX[0], lineX[1], thickness, color);
-		const vertical = drawLine(lineY[0], lineY[1], thickness, color);
-		layerGroup.appendChild(horizontal);
-		layerGroup.appendChild(vertical);
-	} else {
-		//console.log('diagonal bands and crosses');
-		let a = [0, dimensions[1]];
-		let b = [dimensions[0], 0];
-		const thickness = 3 + (bigChungus(seed + 1) % 31);
-		const miniDeterminer = (bigChungus(seed + 289) % 643);
-		if (miniDeterminer < 200) {
-			const layer = drawLine([0, 0], [b[0], a[1]], thickness, color);
-			layerGroup.appendChild(layer);
-		} else if (miniDeterminer < 400) {
-			const layer = drawLine(a, b, thickness, color);
-			layerGroup.appendChild(layer);
+	} else if (determiner < .90) {
+		console.log('radial rays');
+		if (posDeterminer < .66 && dimensions[0] !== dimensions[1]) {
+			// offset for nordic style cross
+			layerGroup.noEmblem = true;
+			if (!isCircle) {
+				layerGroup.setAttribute('transform', `translate(${sortedLengths[0]/2},${sortedLengths[0]/2})`);
+			}
+		}
+		const baseRay = [[0, 0], [0, -sortedLengths[1]]];
+		let rayCount = 2 + ((seed % 577) % 6)
+		if (rayCount === 7) {rayCount++}
+		const rayThickness = 4 + ((bandThickness * 26) * (sortedLengths[0] / sortedLengths[1]) / (rayCount ** 0.7))
+		if (rayCount === 2) {
+			const ray1 = drawLine(baseRay[0], baseRay[1], rayThickness, colors[1]);
+			const ray2 = ray1.cloneNode()
+		  ray2.setAttribute('transform', `rotate(180)`);
+			if (doubleBandsDet < .4) {
+				const bgRay1 = drawLine(baseRay[0], baseRay[1], rayThickness * 1.23, colors[0]);
+				const trimRay1 = drawLine(baseRay[0], baseRay[1], rayThickness * 1.42, colors[1]);
+				const bgRay2 = bgRay1.cloneNode()
+				const trimRay2 = trimRay1.cloneNode()
+				bgRay2.setAttribute('transform', `rotate(180)`);
+				trimRay2.setAttribute('transform', `rotate(180)`);
+				rotGroup.appendChild(trimRay1);
+				rotGroup.appendChild(trimRay2);
+				rotGroup.appendChild(bgRay1);
+				rotGroup.appendChild(bgRay2);
+			}
+			rotGroupTop.appendChild(ray1);
+			rotGroupTop.appendChild(ray2);
+			layerGroup.setAttribute('transform', `translate(${dimensions[0] / 2},${dimensions[1] / 2})`);
+		} else if ((doubleBandsDet < .7) && (colorCount > 1)) {
+			// overlapping colors 
+			for (let i = 0; i < rayCount; i++) {
+				ray1 = drawLine(baseRay[0], baseRay[1], rayThickness, colors[1]);
+				ray1.setAttribute('transform', `rotate(${i * 360 / rayCount})`);
+				let thicknessRatio = .5
+				if (doubleBandsDet < .35) {
+					thicknessRatio = .354
+				}
+				ray2 = drawLine(baseRay[0], baseRay[1], rayThickness * thicknessRatio, colors[2]);
+				ray2.setAttribute('transform', `rotate(${i * 360 / rayCount})`);
+				rotGroup.appendChild(ray1);
+				rotGroupTop.appendChild(ray2);
+			}
+		} else if (rayCount % 2 == 0) {
+			// alternating color rays
+			for (let i = 0; i < rayCount; i++) {
+				let colorSwitch = 1
+				if (colorCount > 1 && rayCount > 5) {
+					colorSwitch = 1 + (i % 2)
+				} 
+				ray = drawLine(baseRay[0], baseRay[1], rayThickness, colors[colorSwitch]);
+				ray.setAttribute('transform', `rotate(${i * 360 / rayCount})`);
+				if (i % 2 === 0) {
+					rotGroup.appendChild(ray);
+				} else {
+					rotGroupTop.appendChild(ray);
+				}
+			}
 		} else {
-			const layer = drawLine([0, 0], [b[0], a[1]], (thickness / 3) + 3, color);
-			const second = drawLine(a, b, (thickness / 3) + 3, color);
-			layerGroup.appendChild(second);
-			layerGroup.appendChild(layer);
+			// monocolor rays
+			for (let i = 0; i < rayCount; i++) {
+				ray = drawLine(baseRay[0], baseRay[1], rayThickness, colors[1]);
+				ray.setAttribute('transform', `rotate(${i * 360 / rayCount})`);
+				rotGroup.appendChild(ray);
+			}
+		}
+		let degrees = 0
+		if (rotDeterminer < .4) {
+			degrees += 180 / rayCount
+		}
+		if ((rotDeterminer * 100) % 10 < 5) {
+			degrees += 360 / rayCount
+		}
+		if ((rotDeterminer * 1000) % 10 < 4) {
+			degrees += 90
+		}
+		if ((rayCount === 2) && ((rotDeterminer * 10000) % 10 < 5)) {
+			degrees += 45
+		}
+		console.log('deg', degrees);
+		rotGroup.setAttribute('transform', `rotate(${degrees})`);
+		rotGroupTop.setAttribute('transform', `rotate(${degrees})`);
+	} else {
+		// out of 1009
+		console.log('diagonal bands and crosses');
+		layerGroup.setAttribute('transform', 'translate(0)');
+		let thicknessRatio = .5
+		if (doubleBandsDet < .5) {
+			thicknessRatio = .354
+		}
+		const miniDeterminer = (seed % 643) / 643
+		if (miniDeterminer < .30) {
+			// diagonal nw to se
+			const layer1 = drawLine([0, 0], [dimensions[0], dimensions[1]], 3 + bandThickness * 20, colors[1]);
+			layerGroup.appendChild(layer1);
+			if (colorCount > 1) {
+				const layer2 = drawLine([0, 0], [dimensions[0], dimensions[1]], 3 + bandThickness * thicknessRatio * 20, colors[2]);
+				layerGroup.appendChild(layer2);
+			}
+		} else if (miniDeterminer < .60) {
+			//diagonal ne to sw
+			const layer1 = drawLine([0, dimensions[1]], [dimensions[0], 0], 3 + bandThickness * 20, colors[1]);
+			layerGroup.appendChild(layer1);
+			if (colorCount > 1) {
+				const layer2 = drawLine([0, dimensions[1]], [dimensions[0], 0], 3 + bandThickness * thicknessRatio * 20, colors[2]);
+				layerGroup.appendChild(layer2);
+			}
+		} else {
+			// cross
+			const layer1 = drawLine([0, 0], [dimensions[0], dimensions[1]], (bandThickness * 16) + 3, colors[1]);
+			const layer2 = drawLine([0, dimensions[1]], [dimensions[0], 0], (bandThickness * 16) + 3, colors[1]);
+			layerGroup.appendChild(layer2);
+			layerGroup.appendChild(layer1);
+			if (colorCount > 1) {
+				const layer3 = drawLine([0, 0], [dimensions[0], dimensions[1]], (bandThickness * thicknessRatio * 16) + 3, colors[2]);
+				const layer4 = drawLine([0, dimensions[1]], [dimensions[0], 0], (bandThickness * thicknessRatio * 16) + 3, colors[2]);
+				layerGroup.appendChild(layer3);
+				layerGroup.appendChild(layer4);
+			}
 		}
 	}
-	if ((bigChungus(seed) + 3108) % 52391 > 41000) {layerGroup.noEmblem = true}
+	if ((seed % 52391 ) / 52391 > .83) {layerGroup.noEmblem = true}
 	return layerGroup;
 }
 
@@ -428,100 +476,86 @@ function selectEmblem(seed, dimensions, color, bgIsCircle) {
 	emblemSide = smallestSide
 	if (bgIsCircle) { emblemSide *= 0.82; }
 	emblemSide *= 0.91;
-	const sizeDeterminer = (bigChungus(seed) + 7155) % 30529;
-	const sizeVariance = 1.6
+	const sizeDeterminer = (seed % 30529) / 30529
+	const sizeVariance = 3.2
 	const sizeLimit = 2.1
-	emblemSide *= 1 + ((((sizeDeterminer - 15264) / (15264 / sizeVariance)) ** 3) / (sizeLimit * (sizeVariance ** 3)))
-	const rotateDeterminer = (bigChungus(seed) + 4677) % 74897;
-	const determiner = (bigChungus(seed) + 303) % 997;
+	emblemSide *= 1 + ((((sizeDeterminer - .5) / sizeVariance) ** 3) / (sizeLimit * (sizeVariance ** 3)))
+	const rotateDeterminer = (seed % 74897) / 74897
+	const determiner = (seed % 997) / 997
 	const layerGroup = document.createElementNS(svgNameSpace, 'g');
 	let emblem;
-	if        (determiner < 150) {
+	if        (determiner < .16) {
 		//console.log('circle');
 		emblem = drawCircle((emblemSide * 0.28), color);
-		emblem.setAttribute('transform', `translate(${dimensions[0]/2},${dimensions[1]/2})`);
-	} else if (determiner < 220) {
+	} else if (determiner < .23) {
 		//console.log('hex');
 		emblem = drawHex((emblemSide * 0.3), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 30}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
-	} else if (determiner < 290) {
+		if (rotateDeterminer > .5) {degrees = 30}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
+	} else if (determiner < .31) {
 		//console.log('pent');
 		emblem = drawPent((emblemSide * 0.39), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 36}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
-	} else if (determiner < 450) {
+		if (rotateDeterminer > .5) {degrees = 36}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
+	} else if (determiner < .41) {
 		//console.log('rhomb root 3');
 		emblem = drawRhombus((emblemSide * 0.43), (emblemSide * 0.74), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 90}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
-	} else if (determiner < 510) {
+		if (rotateDeterminer > .5) {degrees = 90}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
+	} else if (determiner < .51) {
 		//console.log('rhomb root 2');
 		emblem = drawRhombus((emblemSide * 0.47), (emblemSide * 0.67), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 90}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
-	} else if (determiner < 730) {
+		if (rotateDeterminer > .5) {degrees = 90}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
+	} else if (determiner < .71) {
 		//console.log('star');
 		emblem = drawStar((emblemSide * 0.44), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 36}
-		if (rotateDeterminer % 19 > 13) {degrees += 90}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
-	} else if (determiner < 820) {
+		if (rotateDeterminer > .5) {degrees = 36}
+		if (rotateDeterminer * 19 > 13) {degrees += 90}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
+	} else if (determiner < .83) {
 		//console.log('square');
 		emblem = drawRect((emblemSide * 0.56), (emblemSide * 0.56), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 45}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
+		if (rotateDeterminer > .5) {degrees = 45}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
 	} else {
 		//console.log('triangle');
 		emblem = drawTriangle((emblemSide * 0.65), color);
 		let degrees = 0;
-		if (rotateDeterminer > 37500) {degrees = 60}
-		if (rotateDeterminer % 19 > 12) {degrees += 90}
-		emblem.setAttribute('transform', `
-			translate(${dimensions[0]/2},${dimensions[1]/2})
-			rotate(${degrees})`);
+		if (rotateDeterminer > .5) {degrees = 60}
+		if (rotateDeterminer * 19 > 12) {degrees += 90}
+		emblem.setAttribute('transform', `rotate(${degrees})`);
 	}
-	const outlineDeterminer = (bigChungus(seed) + 11207) % 66883;
-	if (outlineDeterminer < 24212) {
+	const outlineDeterminer = (seed % 66883) / 66883
+	if (outlineDeterminer < .35) {
 		emblem.setAttribute('stroke', `hsl(${color[0]}, ${color[1]}%, ${color[2]}%)`);
 		emblem.setAttribute('stroke-width', (smallestSide * 0.04));
 		emblem.setAttribute('fill-opacity', 0);
 	}
+	layerGroup.setAttribute('transform', `translate(${dimensions[0]/2},${dimensions[1]/2})`);
 	layerGroup.appendChild(emblem);
 	return layerGroup; 
 }
 
 function selectFormat(seed, dimensions, colors, isCircle) {
-	const determiner = (bigChungus(seed) + 93) % 397;
+	const determiner = (seed % 397) / 397
 	const layerGroup = document.createElementNS(svgNameSpace, 'g');
-	if (determiner < 130) {
-		const layer = selectTriColorLayer(seed, dimensions, colors[1], colors[2]);
+	if (determiner < .35) {
+		const layer = selectLayer(seed, dimensions, colors, 2, isCircle);
 		layerGroup.appendChild(layer);
-	} else if (determiner < 191) {
+	} else if (determiner < .50) {
 		// emblem with no bg layer
 		const emblem = selectEmblem(seed, dimensions, colors[1], isCircle);
 		layerGroup.appendChild(emblem);
 	} else {
 		// emblem plus mono layer
-		const layer = selectMonoColorLayer(seed, dimensions, colors[1], isCircle);
+		const layer = selectLayer(seed, dimensions, colors, 1, isCircle);
 		layerGroup.appendChild(layer);
 		if (!layer.noEmblem) {
 			const emblem = selectEmblem(seed, dimensions, colors[2], isCircle);
@@ -533,7 +567,7 @@ function selectFormat(seed, dimensions, colors, isCircle) {
 
 function createAvatar(inputID) {
 	const seed = bigChungus(inputID);
-	const colors = selectColors(seed, 3);
+	const colors = selectColors(seed);
 	console.log('these are the colors', colors);
 	const svg = setBg(seed, colors[0]);
 	const width = svg.width.baseVal.value;
