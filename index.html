@@ -4,24 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>flaggy</title>
+		<link href="assets/flaggy.ico" rel="shortcut icon" >
     <link href="main.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
 		<div class="container">
-			<h2 class="title">flaggy</h2>
-			<div id="content" class="content">
-				<button id="generateFlagGrid" class="input button">generate</button>
-				<div id="test"></div>
+			<header>
+				<h2 class="title">flaggy</h2>
+				<h5 class="description">randomly generated svg avatars for social media</h5>
+			</header>
+			<div id="selection">
+				<h4 id="selectDisplayFlags" class="selection">just the flags</h4>
+				<h4 id="selectDisplaySocial" class="selection">social media demo</h4>
+			</div>
+			<div id="test" class="hidden"></div>
+			<div id="justFlagsDiv" class="content hidden">
+				<button id="generateFlagGrid" class="input button">new flags</button>
 				<div id="flagGrid" class="flag-grid">
+				</div>
+			</div>
+			<div id="socialDiv" class="content">
+				<button id="generateNewPost" class="input button">new posts</button>
+				<div id="postDisplay" class="post-display">
 				</div>
 			</div>
 			<footer>
 				<a href="https://github.com/ludant/flaggy">ludant@github</a>
 			</footer>
+			</div>
 		</div>
   </body>
-	<script src="flaggy.js"></script>
-	<script src="main.js"></script>
+	<script src="flaggy.js" type="text/javascript"></script>
+	<script src="main.js" type="text/javascript"></script>
 </html>
 
 

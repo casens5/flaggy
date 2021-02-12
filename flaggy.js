@@ -197,7 +197,7 @@ function selectLightness(seed, numOfSelections) {
 function selectHues(inputColors, seed) {
 	// only guanateed to pass when you have less than 4 hues to select.
 	// (you could get more if you narrowed the hue contrast.
-	// current min contrast val = 59)
+	// current min contrast val = 75)
 	const colors = [];
 	const hues = [];
 	for (let index = 0; index < inputColors.length; index++) {
@@ -219,7 +219,7 @@ function selectHues(inputColors, seed) {
 				for (let salt = 0; hues.length < huesNeeded; salt++) {
 					const hue = bigChungus(seed + (index * 10000) + salt) % 360;
 					let hueAllowed = true;
-					const minContrast = 59;
+					const minContrast = 75;
 					hues.forEach((oldHue) => {
 						if (   ( (hue > (oldHue - minContrast      )  )
 									 &&(hue < (oldHue + minContrast      )  )  )
@@ -287,36 +287,36 @@ function selectLayer(seed, dimensions, colors, colorCount, isCircle) {
 	const doubleBandsDet = (seed % 2137) / 2137;
 	const determiner = (seed % 1009) / 1009;
 	if        (determiner < .15) {
-		console.log('half horizontal bands');
+		//console.log('half horizontal bands');
 		const layer = drawRect(dimensions[0], dimensions[1] / 2, colors[1]);
 		layer.setAttribute('transform', `translate(0, ${-dimensions[1] / 4})`);
 		layerGroup.appendChild(layer);
 		if (colorCount > 1) {
-			console.log('three horizontal bands');
+			//console.log('three horizontal bands');
 			layer.setAttribute('transform', `translate(0, ${-dimensions[1] / 12})`);
 			const layerTop = drawRect(dimensions[0], dimensions[1] / 3, colors[2]);
 			layerTop.setAttribute('transform', `translate(0, ${-dimensions[1] / 3})`);
 			layerGroup.appendChild(layerTop);
 		}
 	} else if (determiner < .30) {
-		console.log('half vertical band');
+		//console.log('half vertical band');
 		const layer = drawRect(dimensions[0] / 2, dimensions[1], colors[1]);
 		layer.setAttribute('transform', `translate(${-dimensions[0] / 4})`);
 		layerGroup.appendChild(layer);
 		if (colorCount > 1) {
-			console.log('three vertical bands');
+			//console.log('three vertical bands');
 			layer.setAttribute('transform', `translate(${-dimensions[0] / 12})`);
 			const layerTop = drawRect(dimensions[0] / 3, dimensions[1], colors[2]);
 			layerTop.setAttribute('transform', `translate(${-dimensions[0] / 3})`);
 			layerGroup.appendChild(layerTop);
 		}
 	} else if (determiner < .45) {
-		console.log('half diagonal');
+		//console.log('half diagonal');
 		layerGroup.setAttribute('transform', `translate(0)`);
 		const layer = drawLine([-dimensions[0] / 2, dimensions[1]], [dimensions[0], -dimensions[1] / 2], diagThickness, colors[1]);
 		layerGroup.appendChild(layer);
 		if (colorCount > 1) {
-			console.log('three diag bands');
+			//console.log('three diag bands');
 			const layerTop = drawLine([-dimensions[0] / 2, dimensions[1]], [dimensions[0], -dimensions[1] / 2], diagThickness, colors[2]);
 			layer.setAttribute('transform', `translate(${dimensions[0] / 6}, ${dimensions[1] / 6})`);
 			layerTop.setAttribute('transform', `translate(${-dimensions[0] / 6}, ${-dimensions[1] / 6})`);
@@ -327,12 +327,12 @@ function selectLayer(seed, dimensions, colors, colorCount, isCircle) {
 			layerGroup.appendChild(layerTop);
 		}
 	} else if (determiner < .60) {
-		console.log('half other diagonal');
+		//console.log('half other diagonal');
 		layerGroup.setAttribute('transform', `translate(0)`);
 		const layer = drawLine([0, -dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1]], diagThickness, colors[1]);
 		layerGroup.appendChild(layer);
 		if (colorCount > 1) {
-			console.log('three diag bands');
+			//console.log('three diag bands');
 			const layerTop = drawLine([0, -dimensions[1] / 2], [dimensions[0] * 3 / 2, dimensions[1]], diagThickness, colors[2]);
 			layer.setAttribute('transform', `translate(${-dimensions[0] / 6}, ${dimensions[1] / 6})`);
 			layerTop.setAttribute('transform', `translate(${dimensions[0] / 6}, ${-dimensions[1] / 6})`);
@@ -343,7 +343,7 @@ function selectLayer(seed, dimensions, colors, colorCount, isCircle) {
 			}
 		}
 	} else if (determiner < .90) {
-		console.log('radial rays');
+		//console.log('radial rays');
 		if (posDeterminer < .66 && dimensions[0] !== dimensions[1]) {
 			// offset for nordic style cross
 			layerGroup.noEmblem = true;
@@ -424,12 +424,12 @@ function selectLayer(seed, dimensions, colors, colorCount, isCircle) {
 		if ((rayCount === 2) && ((rotDeterminer * 10000) % 10 < 5)) {
 			degrees += 45
 		}
-		console.log('deg', degrees);
+		//console.log('deg', degrees);
 		rotGroup.setAttribute('transform', `rotate(${degrees})`);
 		rotGroupTop.setAttribute('transform', `rotate(${degrees})`);
 	} else {
 		// out of 1009
-		console.log('diagonal bands and crosses');
+		//console.log('diagonal bands and crosses');
 		layerGroup.setAttribute('transform', 'translate(0)');
 		let thicknessRatio = .5
 		if (doubleBandsDet < .5) {
@@ -568,7 +568,7 @@ function selectFormat(seed, dimensions, colors, isCircle) {
 function createAvatar(inputID) {
 	const seed = bigChungus(inputID);
 	const colors = selectColors(seed);
-	console.log('these are the colors', colors);
+	//console.log('these are the colors', colors);
 	const svg = setBg(seed, colors[0]);
 	const width = svg.width.baseVal.value;
 	const height = svg.height.baseVal.value;

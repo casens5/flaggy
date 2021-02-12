@@ -1,26 +1,41 @@
 @media (prefers-color-scheme: dark) {
   :root {
-    --base-bg: #131a21;
+    --bg-base: #0e1216;
+    --bg-content: #182329;
     --text: #ddb;
-    --link-text: #4ad;
+    --text-bold: #cd5;
+    --text-link: #4ad;
+    --text-active: #b5b;
+    --text-hover: #d97;
+    --text-date: #777;
   }
 }
 @media (prefers-color-scheme: no-preference) {
   :root {
-    --base-bg: #131a21;
+    --bg-base: #0e1216;
+    --bg-content: #182329;
     --text: #ddb;
-    --link-text: #4ad;
+    --text-bold: #cc9;
+    --text-link: #4ad;
+    --text-active: #b5b;
+    --text-hover: #d97;
+    --text-date: #777;
   }
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --base-bg: #facade;
-    --text: #222;
-    --link-text: #4ad;
+    --bg-base: #fff;
+    --bg-content: #facade;
+    --text: #46a;
+    --text-bold: #4df;
+    --text-link: #22b;
+    --text-active: #b5b;
+    --text-hover: #d97;
+    --text-date: #777;
   }
 }
 html, body {
-  background: var(--base-bg);
+  background: var(--bg-base);
   margin: 0;
   padding: 0;
   height: 100%;
@@ -33,15 +48,39 @@ html, body {
 }
 
 a {
-  color: var(--link-text);
+  color: var(--text-link);
   text-decoration: underline;
 }
 
 .container {
+  background: var(--bg-content);
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  margin: 1em;
+  padding-left: 2em;
+  padding-right: 2em;
+  max-width: 30em;
+  margin: auto;
+}
+
+.description {
+  text-align: center;
+  font-style: italic;
+  font-weight: normal;
+}
+
+#selection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.selection {
+  color: var(--text-active);
+}
+
+.selection:hover {
+  color: var(--text-hover);
 }
 
 .input {
@@ -67,15 +106,66 @@ a {
 }
 
 .title {
-  color: #bb6;
+  text-align: center;
+  color: var(--text-bold);
 }
 
 .content {
-  color: #909;
+  color: var(--text);
+}
+
+.post-display {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.post {
+  display: flex;
+  flex-direction: row;
+  background: #fff1;
+  border-radius: 1em;
+  margin: 1em;
+}
+
+.post-text {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 1;
+  margin-top: 1em;
+  margin-right: 1em;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar {
+  display: flex;
+  justify-content: flex-end;
+  width: 67px;
+  flex-shrink: 0;
+  margin: 1em;
+}
+
+.username {
+  color: var(--text-bold);
+  margin-right: 1em;
+}
+
+.image-post {
+  width: 100%;
+}
+
+time {
+  color: var(--text-date);
+  font-style: italic;
 }
 
 footer {
   margin-top: auto;
+  margin-bottom: 2em;
+}
+
+.hidden {
+  display: none;
 }
 
 /*# sourceMappingURL=main.css.map */

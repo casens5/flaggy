@@ -1,12 +1,38 @@
 'use strict'
 
+const socialPosts = []
+
 function $(id) {
 	return document.getElementById(id);
 }
 
-$('generateFlagGrid').addEventListener('click', () => {
-	clearFlags();
-});
+function stringHash(str) {
+	// if you think this is a hash you are mistaken
+	let num = 0
+	for (let i = 0; i < 6; i++) {
+		num += str.charCodeAt(i) * (256 ** i)
+	}
+	return num
+}
+
+function addListeners() {
+	$('selectDisplayFlags').addEventListener('click', () => {
+		$('justFlagsDiv').classList.remove('hidden');
+		$('socialDiv').classList.add('hidden');
+	});
+	$('selectDisplaySocial').addEventListener('click', () => {
+		$('justFlagsDiv').classList.add('hidden');
+		$('socialDiv').classList.remove('hidden');
+	});
+	$('generateNewPost').addEventListener('click', () => {
+		clearPosts();
+		generatePost();
+	});
+	$('generateFlagGrid').addEventListener('click', () => {
+		clearFlags();
+		generateFlagGrid();
+	});
+}
 
 function testy() {
 	const seed = bigChungus(169);
@@ -43,6 +69,72 @@ function clearFlags() {
 	const flagGrid = document.createElement('div');
 	flagGrid.id = 'flagGrid';
 	flagGrid.classList.add('flag-grid');
-	$('content').appendChild(flagGrid);
+	$('justFlagsDiv').appendChild(flagGrid);
+}
+
+function loadPosts() {
+	fetch("assets/posts.json")
+		.then(response => response.json())
+		.then(json => {
+			json.forEach(post => socialPosts.push(post));
+			generatePost();
+		});
+}
+
+function generatePost() {
+	const randomInt = Math.floor(Math.random() * socialPosts.length); 
+	const postData = socialPosts[randomInt];
+	const salt = Math.floor(Math.random() * 9999989);
+	const containerDiv = $('postDisplay');
+	for (let i = 0; i < postData.length; i++) {
+		const postContainer = document.createElement('div');
+		const textContainer = document.createElement('div');
+		const avatarContainer = document.createElement('div');
+		const postHead = document.createElement('div');
+		const postText = document.createElement('p');
+		const username = document.createElement('span');
+		const time = document.createElement('time');
+		postContainer.classList.add('post');
+		username.classList.add('username');
+		textContainer.classList.add('post-text');
+		const flag = createAvatar(stringHash(postData[i].user) + salt);
+		avatarContainer.classList.add('avatar');
+		const timeObj = new Date(postData[i].timestamp)
+		let timeString = timeObj.toLocaleDateString() + "  " + timeObj.toLocaleTimeString();
+		timeString = timeString.substring(0, timeString.length - 3);
+		postText.textContent = postData[i].content
+		username.textContent = postData[i].user
+		time.textContent = timeString
+		avatarContainer.appendChild(flag);
+		postContainer.appendChild(avatarContainer);
+		postHead.appendChild(username);
+		postHead.appendChild(time);
+		textContainer.appendChild(postHead);
+		if ('imageSrc' in postData[i]) {
+			const image = document.createElement('img');
+			image.src = postData[i].imageSrc;
+			image.classList.add('image-post');
+			postText.appendChild(image);
+		}
+		textContainer.appendChild(postText);
+		postContainer.appendChild(textContainer);
+		containerDiv.appendChild(postContainer);
+	}
+}
+
+function clearPosts() {
+	$('postDisplay').remove()
+	const postDisplayDiv = document.createElement('div');
+	postDisplayDiv.id = 'postDisplay';
+	postDisplayDiv.classList.add('post-display');
+	$('socialDiv').appendChild(postDisplayDiv);
+
+}
+
+function main() {
+	addListeners();
+	loadPosts();
 	generateFlagGrid();
 }
+
+main();
