@@ -31,12 +31,14 @@
     --text-hover: #d97
     --text-date: #777
 
+
 html, body
   background: var(--bg-base)
   margin: 0
   padding: 0
   height: 100%
   min-height: 100%
+  font-family: inherit, Arial, sans-serif
 
 *
   color: var(--text)
@@ -68,6 +70,7 @@ a
 
 .selection
   color: var(--text-active)
+  margin-top: 0px
 
 .selection:hover
   color: var(--text-hover)
@@ -84,12 +87,20 @@ a
   display: grid
   grid-template-rows: repeat(6, 1fr)
   grid-template-columns: repeat(6, 1fr)
-  height: 28em
-  width: 28em
+  height: 480px 
+  max-width: 480px
   margin: auto
+  margin-top: 0.5em
+  margin-bottom: 0.5em
+  overflow: hidden
 
 .flag
   margin: auto
+  width: 80px
+  height: 80px 
+  display: flex
+  justify-content: center
+  align-items: center
 
 .title
   text-align: center
@@ -117,13 +128,17 @@ a
   margin-right: 1em
   width: 100%
   height: 100%
+  overflow: hidden
 
 .avatar
   display: flex
   justify-content: flex-end
+  align-items: flex-start
   width: 67px
-  flex-shrink: 0
+  height: 67px
   margin: 1em
+  margin-bottom: 0
+  flex-shrink: 0
 
 .username
   color: var(--text-bold)
@@ -135,10 +150,50 @@ a
 time
   color: var(--text-date)
   font-style: italic
+  white-space: nowrap
 
 footer
   margin-top: auto
   margin-bottom: 2em
+
+@media (max-width: 560px)
+  .container
+    padding-left: 0px
+    padding-right: 0px
+
+  #generateNewFlag
+    margin-left: 2em
+
+  #generateNewPost
+    margin-left: 2em
+
+  footer
+    margin-left: 2em
+
+  .post
+    margin-left: 0
+    margin-right: 0
+
+
+@media (max-width: 480px)
+  .flag-grid
+    grid-template-columns: repeat(5, 1fr)
+
+@media (max-width: 400px)
+  .flag-grid
+    grid-template-columns: repeat(4, 1fr)
+
+@media (max-width: 320px)
+  .flag-grid
+    grid-template-columns: repeat(3, 1fr)
+
+@media (max-width: 240px)
+  .flag-grid
+    grid-template-columns: repeat(2, 1fr)
+
+@media (max-width: 140px)
+  .flag-grid
+    grid-template-columns: repeat(1, 1fr)
 
 .hidden
   display: none

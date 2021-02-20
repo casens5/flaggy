@@ -59,6 +59,7 @@ function generateFlagGrid() {
 		const container = document.createElement('div');
 		container.classList.add('flag');
 		const flag = createAvatar(seed + i);
+		flag.setAttribute('transform', 'scale(1.12)');
 		container.append(flag);
 		flagGrid.append(container);
 	}
@@ -94,20 +95,23 @@ function generatePost() {
 		const postText = document.createElement('p');
 		const username = document.createElement('span');
 		const time = document.createElement('time');
+		const spacer = document.createElement('span');
 		postContainer.classList.add('post');
 		username.classList.add('username');
 		textContainer.classList.add('post-text');
 		const flag = createAvatar(stringHash(postData[i].user) + salt);
 		avatarContainer.classList.add('avatar');
+		avatarContainer.classList.add('flag');
 		const timeObj = new Date(postData[i].timestamp)
 		let timeString = timeObj.toLocaleDateString() + "  " + timeObj.toLocaleTimeString();
-		timeString = timeString.substring(0, timeString.length - 3);
-		postText.textContent = postData[i].content
-		username.textContent = postData[i].user
-		time.textContent = timeString
+		spacer.textContent = "   ";
+		postText.textContent = postData[i].content;
+		username.textContent = postData[i].user;
+		time.textContent = timeString;
 		avatarContainer.appendChild(flag);
 		postContainer.appendChild(avatarContainer);
 		postHead.appendChild(username);
+		postHead.appendChild(spacer);
 		postHead.appendChild(time);
 		textContainer.appendChild(postHead);
 		if ('imageSrc' in postData[i]) {

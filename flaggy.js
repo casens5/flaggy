@@ -470,11 +470,10 @@ function selectLayer(seed, dimensions, colors, colorCount, isCircle) {
 	return layerGroup;
 }
 
-function selectEmblem(seed, dimensions, color, bgIsCircle) {
-	let smallestSide = dimensions[0];
-	if (dimensions[0] > dimensions[1]) { smallestSide = dimensions[1]; }
-	emblemSide = smallestSide
-	if (bgIsCircle) { emblemSide *= 0.82; }
+function selectEmblem(seed, dimensions, color, isCircle) {
+	const sortedLengths = dimensions.slice().sort();
+	if (isCircle) {sortedLengths[0] *= 0.8}
+	emblemSide = sortedLengths[0]
 	emblemSide *= 0.91;
 	const sizeDeterminer = (seed % 30529) / 30529
 	const sizeVariance = 3.2
@@ -535,7 +534,7 @@ function selectEmblem(seed, dimensions, color, bgIsCircle) {
 	const outlineDeterminer = (seed % 66883) / 66883
 	if (outlineDeterminer < .35) {
 		emblem.setAttribute('stroke', `hsl(${color[0]}, ${color[1]}%, ${color[2]}%)`);
-		emblem.setAttribute('stroke-width', (smallestSide * 0.04));
+		emblem.setAttribute('stroke-width', (sortedLengths[0] * 0.04));
 		emblem.setAttribute('fill-opacity', 0);
 	}
 	layerGroup.setAttribute('transform', `translate(${dimensions[0]/2},${dimensions[1]/2})`);
