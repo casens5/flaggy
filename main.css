@@ -1,3 +1,14 @@
+:root {
+  --bg-base: #0e1216;
+  --bg-content: #182329;
+  --text: #ddb;
+  --text-bold: #cd5;
+  --text-link: #4ad;
+  --text-active: #b5b;
+  --text-hover: #d97;
+  --text-date: #777;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-base: #0e1216;
