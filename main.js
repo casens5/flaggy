@@ -1,6 +1,7 @@
 'use strict'
 
-const socialPosts = []
+const socialPosts = [];
+const postOrder = [];
 
 function $(id) {
 	return document.getElementById(id);
@@ -82,9 +83,20 @@ function loadPosts() {
 		});
 }
 
+function shufflePosts() {
+	const integers = []
+	for (let i = 0; i < socialPosts.length; i++) {
+		integers.push(i);
+	}
+	while (integers.length > 0) {
+		const position = Math.floor(Math.random() * integers.length)
+		postOrder.push(integers.splice(position, 1));
+	}
+}
+
 function generatePost() {
-	const randomInt = Math.floor(Math.random() * socialPosts.length); 
-	const postData = socialPosts[randomInt];
+	if (postOrder.length <= 0) {shufflePosts()}
+	const postData = socialPosts[postOrder.pop()];
 	const salt = Math.floor(Math.random() * 9999989);
 	const containerDiv = $('postDisplay');
 	for (let i = 0; i < postData.length; i++) {
@@ -101,7 +113,6 @@ function generatePost() {
 		textContainer.classList.add('post-text');
 		const flag = createAvatar(stringHash(postData[i].user) + salt);
 		avatarContainer.classList.add('avatar');
-		avatarContainer.classList.add('flag');
 		const timeObj = new Date(postData[i].timestamp)
 		let timeString = timeObj.toLocaleDateString() + "  " + timeObj.toLocaleTimeString();
 		spacer.textContent = "   ";
