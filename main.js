@@ -114,7 +114,7 @@ function generatePost() {
 		const flag = createAvatar(stringHash(postData[i].user) + salt);
 		avatarContainer.classList.add('avatar');
 		const timeObj = new Date(postData[i].timestamp)
-		let timeString = timeObj.toLocaleDateString() + "  " + timeObj.toLocaleTimeString();
+		let timeString = timeObj.toLocaleString();
 		spacer.textContent = "   ";
 		postText.textContent = postData[i].content;
 		username.textContent = postData[i].user;
