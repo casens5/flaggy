@@ -45,7 +45,8 @@
     --text-date: #777;
   }
 }
-html, body {
+html,
+body {
   background: var(--bg-base);
   margin: 0;
   padding: 0;
