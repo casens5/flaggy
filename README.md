@@ -1,6 +1,6 @@
 # flaggy
 
-[ludant.github.io/flaggy](https://ludant.github.io/flaggy/)
+[casens5.github.io/flaggy](https://casens5.github.io/flaggy/)
 
 a deterministicly-random generator for SVG user avatars.  inspired by [designs of national flags](https://old.reddit.com/r/vexillology/).
 
